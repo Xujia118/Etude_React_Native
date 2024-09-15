@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { View, Text, Image, Button, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
 
 const Profile = () => {
@@ -18,30 +16,21 @@ const Profile = () => {
                 <Text style={styles.name}>Jane Smith</Text>
             </View>
 
-            <Text style={styles.bio}>I love coding!</Text>
+            <View style={styles.textContainer}>            
+                <Text style={styles.bio}>
+                    I love coding!
+                </Text>
+            </View>
 
-            <Button
-                title="Button"
-                color={"red"}
-                onPress={() => handlePress('Button')} 
-            />
-
-            <Pressable style={styles.button} onPress={() => handlePress('Pressable')}>
+            <Pressable style={( {pressed} ) => [
+                styles.button,
+                pressed && styles.pressedButton
+            ]} 
+                onPress={() => handlePress('Pressable')}>
                 <Text style={styles.buttonText}>
-                    Pressable
+                    Connect!
                 </Text>
             </Pressable>
-
-            
-
-
-            <TouchableOpacity style={styles.button} onPress={() => handlePress('Touch')}>
-                <Text style={styles.buttonText}>
-                    TouchableOpacity
-                </Text>
-            </TouchableOpacity>
-
-            <View style={styles.container} />
         </View>
     )
 }
@@ -54,6 +43,16 @@ const styles = StyleSheet.create({
         margin: 20,
         paddingTop: 50,
         paddingBottom: 40,
+
+        // borderWidth: 1, 
+        // borderColor: "black",
+        borderRadius: 15,
+
+        backgroundColor: "white",
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 15,
     },
     image: {
         height: 200,
@@ -63,12 +62,17 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         paddingBottom: 20,
     },
+    textContainer: {
+        padding: 10,
+        margin: 10,
+    },
     textBox: {
         padding: 10,
         margin: 10,
+        
         backgroundColor: "white",
         borderRadius: 5,
-
+        
         shadowColor: "black",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
@@ -79,12 +83,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     bio: {
-
+        fontSize: 16,
     },
     button: {
         padding: 10,
         borderRadius: 10, 
         backgroundColor: "black",
+    },
+    pressedButton: {
+        opacity: 0.5
     },
     buttonText: {        
         color: "white",
