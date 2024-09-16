@@ -6,6 +6,7 @@ import Inventory from "./Inventory"
 import Profile from "./Profile"
 import LearnList from "./LearnList"
 import EtudeState from "./EtudeState"
+import ColorPicker from "./ColorPicker"
 
 const index = () => {
   return (
@@ -13,7 +14,9 @@ const index = () => {
       {/* <Inventory /> */}
       {/* <Profile /> */}
       {/* <LearnList /> */}
-      <EtudeState />
+      {/* <EtudeState /> */}
+      <ColorPicker />
+
     </View>
   )
 }
