@@ -6,28 +6,31 @@ import React, { useReducer } from "react";
 import reducer, { initialState } from "./reducer";
 
 // Import components
-import Inventory from "./Inventory";
-import Profile from "./Profile";
-import LearnList from "./LearnList";
-import EtudeState from "./EtudeState";
-import ColorPicker from "./ColorPicker";
 import Todo from "./Todo";
 
 const index = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function addTodo(newTodo) {
-    dispatch({ type: "addTodo", payload: newTodo });
+  function addTodo(text) {
+    dispatch({ type: "addTodo", payload: text });
+  }
+
+  function deleteTodo(id) {
+    dispatch({ type: "deleteTodo", payload: id });
+  }
+
+  function updateTodo({ id, text }) {
+    dispatch({ type: "updateTodo", payload: { id, text } });
   }
 
   return (
     <View>
-      {/* <Inventory /> */}
-      {/* <Profile /> */}
-      {/* <LearnList /> */}
-      {/* <EtudeState /> */}
-      {/* <ColorPicker /> */}
-      <Todo todos={state.todos} addTodo={addTodo} />
+      <Todo
+        todos={state.todos}
+        addTodo={addTodo}
+        updateTodo={updateTodo}
+        deleteTodo={deleteTodo}
+      />
     </View>
   );
 };

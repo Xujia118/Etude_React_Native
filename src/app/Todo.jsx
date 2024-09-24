@@ -4,21 +4,53 @@ import {
   Text,
   TextInput,
   Pressable,
+  TouchableOpacity,
   FlatList,
   StyleSheet,
 } from "react-native";
 
-const Todo = ({ todos, addTodo }) => {
-  const [newTodo, setNewTodo] = useState("");
+const Todo = ({
+  todos,
+  addTodo,
+  updateTodo,
+  deleteTodo,
+}) => {
+  const [localTodoText, setLocalTodoText] = useState("");
+  const [editingId, setEditingId] = useState("");
 
   function handleChange(text) {
-    setNewTodo(text);
+    setLocalTodoText(text);
   }
 
-  function handleSubmit() {
-    if (newTodo.trim()) {
-      addTodo(newTodo);
-      setNewTodo("");
+  function handleAddTodo() {
+    if (localTodoText.trim()) {
+      addTodo(localTodoText);
+      setLocalTodoText("");
+    }
+  }
+
+  function handleDeleteTodo(id) {
+    deleteTodo(id);
+  }
+
+  function handleEditTodo(id) {
+    // Updated button is rendered (by ternary operator)
+    // The todo text to be edited is copied to input field
+    const currentTodo = todos.find((todo) => todo.id === id);
+    if (currentTodo) {
+      setEditingId(id);
+      setLocalTodoText(currentTodo.text);
+    }
+  }
+
+  function handleUpdateTodo(id) {
+    // Update local todo text
+    // Update the todo text under this id in the todos list
+    // editing Id is wiped
+    if (localTodoText.trim()) {
+      updateTodo({ id, text: localTodoText });
+      setLocalTodoText("");
+      setEditingId("");
     }
   }
 
@@ -27,23 +59,49 @@ const Todo = ({ todos, addTodo }) => {
       <Text style={styles.title}>Todo List</Text>
       <TextInput
         style={styles.inputField}
-        value={newTodo}
+        value={localTodoText}
         placeholder="Add a task..."
         onChangeText={handleChange}
       />
-      <Pressable
-        style={({ pressed }) => [
-          styles.submitButton,
-          pressed && styles.pressedButton,
-        ]}
-        onPress={handleSubmit}
-      >
-        <Text style={styles.buttonText}>Add</Text>
-      </Pressable>
+
+      {editingId ? (
+        <Pressable
+          style={({ pressed }) => [
+            styles.addButton,
+            pressed && styles.pressedButton,
+          ]}
+          onPress={() => handleUpdateTodo(editingId)}
+        >
+          <Text style={styles.buttonText}>Update</Text>
+        </Pressable>
+      ) : (
+        <Pressable
+          style={({ pressed }) => [
+            styles.addButton,
+            pressed && styles.pressedButton,
+          ]}
+          onPress={handleAddTodo}
+        >
+          <Text style={styles.buttonText}>Add</Text>
+        </Pressable>
+      )}
+
       <FlatList
         data={todos}
-        renderItem={({ item }) => <Text style={styles.todoItem}>{item}</Text>}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.todoItemContainer}>
+            <Text style={styles.todoItem}>{item.text}</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={() => handleEditTodo(item.id)}>
+                <Text style={styles.editButton}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
+                <Text style={styles.deleteButton}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       />
     </View>
   );
@@ -69,7 +127,7 @@ const styles = StyleSheet.create({
 
     fontSize: 20,
   },
-  submitButton: {
+  addButton: {
     backgroundColor: "blue",
 
     padding: 20,
@@ -91,6 +149,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderBottomWidth: 1,
     borderBottomColor: "gray",
+  },
+  todoItemContainer: {
+    padding: 10,
+
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "gray",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  deleteButton: {
+    color: "red",
+    fontSize: 16,
+  },
+  editButton: {
+    color: "green",
+    fontSize: 16,
   },
 });
 
